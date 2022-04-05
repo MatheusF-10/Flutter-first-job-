@@ -2,6 +2,7 @@
 //Da class HomePage é pra justamente eu conseguir mexer/alterar o estado apenas no "objeto" que 
 //realmente sofre a alteração
 import 'package:flutter/material.dart';
+import 'package:ola_mundo/app_controller.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,11 +16,17 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State <HomePage>{
   int counter = 0;
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
+        //Actions são os menus que aparecem na lateral direita
+        actions: [
+          CustomSwitch()
+        ],
       ),
 
 
@@ -28,19 +35,52 @@ class HomePageState extends State <HomePage>{
       //Sera renderizado no tamanho total (maior tamanho entre ambos) com a ultima cor declarada.
       //Métodos de single render => Align e Center são exemplos 
 
+
+
+      //Aqui é necessário colocar um pai no widget Coluna, porque não tem como manipular o tamanho das 
+      //colunas diretamente no widget "Column", então, geralmente, o widget pai de column é o Container, 
+      //que funciona como se fosse um box, que podemos colocar tamanho
       body: Container(
-        height: 200,
-        width: 200,
-        color: Colors.black,
-        //Aqui está acontecendo um single render, onde renderiza ambos, quadrado preto e verde
-        child: Center(
-          child: Container(
-            height: 100,
-            width: 100,
-            color: Colors.green,
-          ),
+        //Isso, significa que vai ocupar todo espaço disponível da tela
+        width: double.infinity,
+        height: double.infinity,
+
+        //Há uma propriedade chamada ListView() ela é utilizada quando tenho muito conteúdo na página,
+        //e necessito de um scroll
+        //scrollDirection: Axis.horizontal faz o scroll na horizontal e Axis.vertical na vertical
+
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Contador: $counter'),
+            CustomSwitch(),
+            Container(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.black,
+                ),
+                Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.black,
+                ),
+                Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.black,
+                )
+              ],
+            )
+          ],
         ),
-      ),
+      ), 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
           onPressed: () {
@@ -50,5 +90,17 @@ class HomePageState extends State <HomePage>{
           },
       ),
     );
+  }
+}
+
+class CustomSwitch extends StatelessWidget {
+  const CustomSwitch({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(value: AppController.instance.isDartTheme,
+        onChanged: (value){
+          AppController.instance.changeTheme();
+        });
   }
 }
